@@ -358,6 +358,29 @@
 <body>
     <div class="container">
 
+        <!-- ── Paloma Presidente (primero) ── -->
+        <div class="swipe-card" style="background:linear-gradient(135deg,#fff8f0,#fff2e8);border-color:#f5d5b0;margin-bottom:16px;">
+            <div class="swipe-icon" style="background:#FFF0DB;">🕊️</div>
+            <div>
+                <p class="swipe-title" style="color:#b85c00;">Paloma Presidente</p>
+                <p class="swipe-sub">Visita la página oficial de campaña</p>
+            </div>
+            <div class="track" id="t-p" style="background:#f5e6d3;border-color:#e8c99a;">
+                <div class="fill" id="f-p" style="background:#F5C070;"></div>
+                <div class="thumb" id="th-p">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                    </svg>
+                </div>
+                <div class="track-text" id="tt-p" style="color:#b85c00;">
+                    Desliza para visitar
+                    <span class="arrows"><span>›</span><span>›</span><span>›</span></span>
+                </div>
+            </div>
+            <div class="swipe-msg" id="msg-p" style="color:#b85c00;"></div>
+            <button class="reset-btn" id="rb-p" style="display:none" onclick="resetSlider('p')">← Volver</button>
+        </div>
+
         <!-- ── Hero Swipe CTA ── -->
         <div class="hero-cta" id="hero-cta">
             <div class="hero-glow"></div>
@@ -452,29 +475,6 @@
                 </div>
                 <div class="swipe-msg" id="msg-f" style="color:#185FA5;"></div>
                 <button class="reset-btn" id="rb-f" style="display:none" onclick="resetSlider('f')">← Volver</button>
-            </div>
-
-            <!-- Paloma Presidente -->
-            <div class="swipe-card" style="background:linear-gradient(135deg,#fff8f0,#fff2e8);border-color:#f5d5b0;">
-                <div class="swipe-icon" style="background:#FFF0DB;">🕊️</div>
-                <div>
-                    <p class="swipe-title" style="color:#b85c00;">Paloma Presidente</p>
-                    <p class="swipe-sub">Visita la página oficial de campaña</p>
-                </div>
-                <div class="track" id="t-p" style="background:#f5e6d3;border-color:#e8c99a;">
-                    <div class="fill" id="f-p" style="background:#F5C070;"></div>
-                    <div class="thumb" id="th-p">
-                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-                        </svg>
-                    </div>
-                    <div class="track-text" id="tt-p" style="color:#b85c00;">
-                        Desliza para visitar
-                        <span class="arrows"><span>›</span><span>›</span><span>›</span></span>
-                    </div>
-                </div>
-                <div class="swipe-msg" id="msg-p" style="color:#b85c00;"></div>
-                <button class="reset-btn" id="rb-p" style="display:none" onclick="resetSlider('p')">← Volver</button>
             </div>
 
         </div>
