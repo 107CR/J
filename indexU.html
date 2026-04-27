@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juan David Zuluaga</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px 0;
+        }
+        .container {
+            text-align: center;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+        .qr-code {
+            width: 200px;
+            height: 200px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            margin-bottom: 10px;
+        }
+        .qr-link {
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        .qr-link a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .qr-link a:hover { text-decoration: underline; }
+        .profile-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .profile-image {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            border: 3px solid #fff;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        }
+        .side-logo {
+            width: 90px;
+            height: 90px;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
+        .contacts {
+            background: linear-gradient(135deg, #0057d9 0%, #003fa3 60%, #001f6b 100%);
+            color: white;
+            padding: 18px 15px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            box-shadow: 0 6px 24px rgba(0,63,163,0.30), 0 2px 6px rgba(0,0,0,0.12);
+            position: relative;
+            overflow: hidden;
+        }
+        .contacts::before {
+            content: '';
+            position: absolute;
+            top: -30px; left: 50%; transform: translateX(-50%);
+            width: 240px; height: 100px;
+            background: radial-gradient(ellipse, rgba(255,255,255,0.13) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .contact {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 10px 0;
+        }
+        .wa-logo {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+        }
+        .volunteers {
+            font-size: 18px;
+            margin-bottom: 16px;
+        }
+        .channel-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(135deg, #25d366 0%, #128c4a 100%);
+            color: #fff;
+            text-decoration: none;
+            padding: 14px 18px;
+            border-radius: 14px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 18px rgba(18,140,74,0.35);
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+        .channel-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(18,140,74,0.45); text-decoration: none; }
+        .channel-btn-text { display: flex; flex-direction: column; align-items: flex-start; flex: 1; }
+        .channel-label { font-size: 15px; font-weight: 700; line-height: 1.2; }
+        .channel-sub   { font-size: 12px; opacity: 0.85; }
+        .channel-arrow { font-size: 22px; font-weight: 300; opacity: 0.8; }
+        a { color: white; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        /* ── Sliders ── */
+        .sliders-section {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .swipe-card {
+            background: #f8f8f8;
+            border: 1px solid #e2e2dc;
+            border-radius: 16px;
+            padding: 1.5rem 1.25rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+        .swipe-icon {
+            width: 54px; height: 54px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px;
+        }
+        .swipe-title { font-size: 16px; font-weight: 700; color: #1a1a1a; margin: 0; }
+        .swipe-sub   { font-size: 12px; color: #888; margin: 2px 0 0; }
+        .track {
+            position: relative;
+            height: 54px; border-radius: 27px;
+            background: #ebebeb; border: 1px solid #ddd;
+            overflow: hidden; width: 100%;
+            user-select: none; cursor: grab;
+        }
+        .track:active { cursor: grabbing; }
+        .fill {
+            position: absolute; left: 0; top: 0;
+            height: 100%; width: 54px; border-radius: 27px;
+        }
+        .thumb {
+            position: absolute; top: 4px; left: 4px;
+            width: 46px; height: 46px; border-radius: 50%;
+            background: #fff; border: 1px solid #ccc;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .track-text {
+            position: absolute; inset: 0;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 13px; color: #888;
+            pointer-events: none; gap: 6px; letter-spacing: 0.03em;
+        }
+        .arrows span { opacity: 0; font-size: 11px; animation: fa 1.4s infinite; }
+        .arrows span:nth-child(2) { animation-delay: 0.2s; }
+        .arrows span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes fa { 0%,100%{opacity:0} 50%{opacity:1} }
+        .swipe-msg { font-size: 14px; font-weight: 600; min-height: 18px; text-align: center; }
+        .reset-btn { font-size: 12px; background: none; border: none; color: #aaa; cursor: pointer; padding: 0; }
+
+        /* ── Hero CTA ── */
+        .hero-cta {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0057d9 0%, #003fa3 60%, #001f6b 100%);
+            border-radius: 20px;
+            padding: 28px 20px 22px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 8px 32px rgba(0,63,163,0.35), 0 2px 8px rgba(0,0,0,0.15);
+        }
+        .hero-glow {
+            position: absolute;
+            top: -40px; left: 50%; transform: translateX(-50%);
+            width: 260px; height: 140px;
+            background: radial-gradient(ellipse, rgba(255,255,255,0.18) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .hero-badge {
+            background: rgba(255,255,255,0.15);
+            color: #fff;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            padding: 4px 14px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.25);
+            backdrop-filter: blur(4px);
+        }
+        .hero-label {
+            font-size: 22px;
+            font-weight: 800;
+            color: #fff;
+            margin: 0;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.25);
+            letter-spacing: -0.01em;
+        }
+        .hero-sub {
+            font-size: 13px;
+            color: rgba(255,255,255,0.75);
+            margin: 0 0 6px;
+        }
+
+        /* Track */
+        .hero-track {
+            position: relative;
+            height: 58px;
+            border-radius: 29px;
+            background: rgba(255,255,255,0.12);
+            border: 1.5px solid rgba(255,255,255,0.25);
+            overflow: hidden;
+            width: 100%;
+            user-select: none; cursor: grab;
+            backdrop-filter: blur(4px);
+        }
+        .hero-track:active { cursor: grabbing; }
+        .hero-fill {
+            position: absolute; left: 0; top: 0;
+            height: 100%; width: 58px;
+            border-radius: 29px;
+            background: rgba(255,255,255,0.22);
+            transition: none;
+        }
+        .hero-thumb {
+            position: absolute; top: 5px; left: 5px;
+            width: 48px; height: 48px; border-radius: 50%;
+            background: #fff;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.25);
+            font-size: 22px;
+            animation: thumbBounce 1.8s ease-in-out infinite;
+        }
+        @keyframes thumbBounce {
+            0%,100% { transform: translateX(0) scale(1); }
+            40%      { transform: translateX(8px) scale(1.08); }
+            60%      { transform: translateX(5px) scale(1.04); }
+        }
+        .hero-thumb.dragging, .hero-thumb.locked { animation: none; }
+        .hero-track-text {
+            position: absolute; inset: 0;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 13px; color: rgba(255,255,255,0.88);
+            pointer-events: none; gap: 6px; font-weight: 600;
+            letter-spacing: 0.04em;
+        }
+        .ht-arrows span {
+            opacity: 0; font-size: 13px;
+            animation: fa 1.4s infinite;
+        }
+        .ht-arrows span:nth-child(2) { animation-delay: 0.2s; }
+        .ht-arrows span:nth-child(3) { animation-delay: 0.4s; }
+        .hero-msg {
+            font-size: 15px; font-weight: 700; color: #fff;
+            min-height: 20px; text-align: center;
+            text-shadow: 0 1px 6px rgba(0,0,0,0.2);
+        }
+
+        /* ── Video Modal ── */
+        .video-overlay {
+            display: none;
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.88);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 20px;
+            animation: fadeIn 0.25s ease;
+        }
+        .video-overlay.active { display: flex; }
+        @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+        .video-header {
+            width: 100%; max-width: 560px;
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        .video-title {
+            color: #fff; font-size: 18px; font-weight: 700;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .video-close {
+            width: 36px; height: 36px; border-radius: 50%;
+            background: rgba(255,255,255,0.15);
+            border: none; color: #fff; font-size: 20px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: background 0.2s;
+        }
+        .video-close:hover { background: rgba(255,255,255,0.28); }
+        .video-wrapper {
+            width: 100%; max-width: 560px;
+            aspect-ratio: 16/9;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 12px 48px rgba(0,0,0,0.6);
+            background: #000;
+        }
+        .video-wrapper iframe {
+            width: 100%; height: 100%; border: none;
+        }
+        .video-no-url {
+            width: 100%; max-width: 560px;
+            aspect-ratio: 16/9;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            gap: 14px; color: #fff;
+            box-shadow: 0 12px 48px rgba(0,0,0,0.6);
+        }
+        .video-no-url .vnu-icon { font-size: 52px; }
+        .video-no-url .vnu-text { font-size: 15px; color: rgba(255,255,255,0.7); text-align: center; max-width: 260px; line-height: 1.5; }
+        .video-nav {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-top: 14px; width: 100%; max-width: 560px;
+        }
+        .vnav-btn {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.25);
+            color: #fff; font-size: 14px; font-weight: 600;
+            padding: 8px 18px; border-radius: 20px; cursor: pointer;
+            transition: background 0.2s;
+        }
+        .vnav-btn:hover:not(:disabled) { background: rgba(255,255,255,0.28); }
+        .vnav-btn:disabled { opacity: 0.35; cursor: default; }
+        .vnav-counter { color: rgba(255,255,255,0.7); font-size: 13px; font-weight: 600; }
+    </style>
+<body>
+    <div class="container">
+
+        <!-- ── Hero Swipe CTA ── -->
+        <div class="hero-cta" id="hero-cta">
+            <div class="hero-glow"></div>
+            <div class="hero-badge">✨ Juan David Zuluaga</div>
+            <div class="hero-label">¡Únete al movimiento!</div>
+            <div class="hero-sub">Desliza para conocer todo sobre mí</div>
+
+            <div class="hero-track" id="ht">
+                <div class="hero-fill" id="hf"></div>
+                <div class="hero-thumb" id="hth">
+                    <span class="hand-emoji" id="hand">👉</span>
+                </div>
+                <div class="hero-track-text" id="htt">
+                    <span class="ht-arrows"><span>›</span><span>›</span><span>›</span></span>
+                    Desliza para entrar
+                </div>
+            </div>
+            <div class="hero-msg" id="hmsg"></div>
+        </div>
+        <div class="profile-row">
+            <img class="side-logo" src="https://res.cloudinary.com/dqmldaklh/image/upload/v1777267299/WhatsApp_Image_2026-04-27_at_12.11.37_AM_gdwnpc.jpg" alt="Logo izquierdo">
+            <img class="profile-image" src="https://ugc.production.linktr.ee/3ab51e6e-5a85-4e52-94aa-21d95c0416b2_a48d39a555e6f0ed66c46d9ef707333e-tplv-tiktokx-cropcenter-1080-1080.jpeg?io=true&size=avatar-v3_0" alt="Imagen de perfil">
+            <img class="side-logo" src="https://res.cloudinary.com/dqmldaklh/image/upload/c_crop,w_527,h_188,x_0,y_0/v1777267824/Matrix_I_dbhg7d.png" alt="Logo derecho">
+        </div>
+        <div class="contacts">
+            <div class="contact">
+                <img class="wa-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/512px-WhatsApp.svg.png" alt="Logo de WhatsApp">
+                <a href="https://wa.me/3019212016">3019212016</a>
+            </div>
+            <div class="contact">
+                <img class="wa-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/512px-WhatsApp.svg.png" alt="Logo de WhatsApp">
+                <a href="https://wa.me/3147360258">3147360258</a>
+            </div>
+            <div class="contact">
+                <img class="wa-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/512px-WhatsApp.svg.png" alt="Logo de WhatsApp">
+                <a href="https://wa.me/3108585801">3108585801</a>
+            </div>
+        </div>
+        <a class="channel-btn" href="https://whatsapp.com/channel/0029Vb7kb67Jf05UDf8HsF0N" target="_blank">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/WhatsApp.svg/512px-WhatsApp.svg.png" alt="WhatsApp" style="width:28px;height:28px;flex-shrink:0;">
+            <span class="channel-btn-text">
+                <span class="channel-label">Canal Oficial</span>
+                <span class="channel-sub">Sígueme en WhatsApp</span>
+            </span>
+            <span class="channel-arrow">›</span>
+        </a>
+
+        <!-- ── Sliders ── -->
+        <div class="sliders-section">
+
+            <!-- Mi Historia -->
+            <div class="swipe-card">
+                <div class="swipe-icon" style="background:#EEEDFE;">📖</div>
+                <div>
+                    <p class="swipe-title">Mi Historia</p>
+                    <p class="swipe-sub">Revive cada momento guardado</p>
+                </div>
+                <div class="track" id="t-h">
+                    <div class="fill" id="f-h" style="background:#CECBF6;"></div>
+                    <div class="thumb" id="th-h">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                        </svg>
+                    </div>
+                    <div class="track-text" id="tt-h">
+                        Desliza para ingresar
+                        <span class="arrows"><span>›</span><span>›</span><span>›</span></span>
+                    </div>
+                </div>
+                <div class="swipe-msg" id="msg-h" style="color:#534AB7;"></div>
+                <button class="reset-btn" id="rb-h" style="display:none" onclick="resetSlider('h')">← Volver</button>
+            </div>
+
+            <!-- Mi Futuro -->
+            <div class="swipe-card">
+                <div class="swipe-icon" style="background:#E6F1FB;">🚀</div>
+                <div>
+                    <p class="swipe-title">Mi Futuro</p>
+                    <p class="swipe-sub">Descubre lo que está por venir</p>
+                </div>
+                <div class="track" id="t-f">
+                    <div class="fill" id="f-f" style="background:#B5D4F4;"></div>
+                    <div class="thumb" id="th-f">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                        </svg>
+                    </div>
+                    <div class="track-text" id="tt-f">
+                        Desliza para ingresar
+                        <span class="arrows"><span>›</span><span>›</span><span>›</span></span>
+                    </div>
+                </div>
+                <div class="swipe-msg" id="msg-f" style="color:#185FA5;"></div>
+                <button class="reset-btn" id="rb-f" style="display:none" onclick="resetSlider('f')">← Volver</button>
+            </div>
+
+            <!-- Paloma Presidente -->
+            <div class="swipe-card" style="background:linear-gradient(135deg,#fff8f0,#fff2e8);border-color:#f5d5b0;">
+                <div class="swipe-icon" style="background:#FFF0DB;">🕊️</div>
+                <div>
+                    <p class="swipe-title" style="color:#b85c00;">Paloma Presidente</p>
+                    <p class="swipe-sub">Visita la página oficial de campaña</p>
+                </div>
+                <div class="track" id="t-p" style="background:#f5e6d3;border-color:#e8c99a;">
+                    <div class="fill" id="f-p" style="background:#F5C070;"></div>
+                    <div class="thumb" id="th-p">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                        </svg>
+                    </div>
+                    <div class="track-text" id="tt-p" style="color:#b85c00;">
+                        Desliza para visitar
+                        <span class="arrows"><span>›</span><span>›</span><span>›</span></span>
+                    </div>
+                </div>
+                <div class="swipe-msg" id="msg-p" style="color:#b85c00;"></div>
+                <button class="reset-btn" id="rb-p" style="display:none" onclick="resetSlider('p')">← Volver</button>
+            </div>
+
+        </div>
+
+    <!-- ── Video Modal ── -->
+    <div class="video-overlay" id="video-overlay">
+        <div class="video-header">
+            <div class="video-title" id="vmodal-title">📖 Mi Historia</div>
+            <button class="video-close" onclick="closeVideo()">✕</button>
+        </div>
+        <div id="vmodal-body"></div>
+    </div>
+
+    <script>
+        const videos = {
+            h: {
+                title: '📖 Mi Historia',
+                clips: [
+                    'https://player.cloudinary.com/embed/?cloud_name=dqmldaklh&public_id=WhatsApp_Video_2026-04-26_at_11.16.26_PM_yjikc7',
+                    'https://player.cloudinary.com/embed/?cloud_name=dqmldaklh&public_id=WhatsApp_Video_2026-04-26_at_11.19.42_PM_dgmyew'
+                ]
+            },
+            f: {
+                title: '🚀 Mi Futuro',
+                clips: [
+                    'https://player.cloudinary.com/embed/?cloud_name=dqmldaklh&public_id=WhatsApp_Video_2026-04-26_at_11.28.23_PM_e0mbwr'
+                ]
+            }
+        };
+
+        let currentClipIdx = 0;
+        let currentVideoId = null;
+
+        function openVideo(id) {
+            currentVideoId = id;
+            currentClipIdx = 0;
+            document.getElementById('vmodal-title').textContent = videos[id].title;
+            renderClip(id, 0);
+            document.getElementById('video-overlay').classList.add('active');
+        }
+
+        function renderClip(id, idx) {
+            const v = videos[id];
+            const total = v.clips.length;
+            const url = v.clips[idx];
+            const body = document.getElementById('vmodal-body');
+            const navHtml = total > 1 ? `
+                <div class="video-nav">
+                    <button class="vnav-btn" onclick="prevClip()" ${idx === 0 ? 'disabled' : ''}>‹ Anterior</button>
+                    <span class="vnav-counter">${idx + 1} / ${total}</span>
+                    <button class="vnav-btn" onclick="nextClip()" ${idx === total - 1 ? 'disabled' : ''}>Siguiente ›</button>
+                </div>` : '';
+            body.innerHTML = `
+                <div class="video-wrapper">
+                    <iframe src="${url}" allow="autoplay; fullscreen; encrypted-media" allowfullscreen></iframe>
+                </div>
+                ${navHtml}`;
+        }
+
+        function nextClip() {
+            const total = videos[currentVideoId].clips.length;
+            if (currentClipIdx < total - 1) { currentClipIdx++; renderClip(currentVideoId, currentClipIdx); }
+        }
+        function prevClip() {
+            if (currentClipIdx > 0) { currentClipIdx--; renderClip(currentVideoId, currentClipIdx); }
+        }
+
+        function closeVideo() {
+            document.getElementById('video-overlay').classList.remove('active');
+            document.getElementById('vmodal-body').innerHTML = '';
+        }
+        document.getElementById('video-overlay').addEventListener('click', function(e) {
+            if (e.target === this) closeVideo();
+        });
+
+        const cfg = {
+            h: { fill0:'#CECBF6', fillDone:'#534AB7', msgText:'¡Abriendo tu Historia…!' },
+            f: { fill0:'#B5D4F4', fillDone:'#185FA5', msgText:'¡Abriendo tu Futuro…!'  },
+            p: { fill0:'#F5C070', fillDone:'#b85c00', msgText:'¡Abriendo la página…!'  }
+        };
+        const st = {
+            h: { dragging:false, startX:0, curX:0, locked:false },
+            f: { dragging:false, startX:0, curX:0, locked:false },
+            p: { dragging:false, startX:0, curX:0, locked:false }
+        };
+
+        function maxW(id) { return document.getElementById('t-'+id).offsetWidth - 54; }
+
+        function setPos(id, x) {
+            const m = maxW(id);
+            x = Math.max(0, Math.min(x, m));
+            st[id].curX = x;
+            const pct = x / m;
+            const thumb = document.getElementById('th-'+id);
+            const fill  = document.getElementById('f-'+id);
+            const tt    = document.getElementById('tt-'+id);
+            thumb.style.transform = `translateX(${x}px)`;
+            fill.style.width = (x + 54) + 'px';
+            tt.style.opacity = Math.max(0, 1 - pct * 2.2);
+            if (pct > 0.5) {
+                fill.style.background = cfg[id].fillDone;
+                thumb.style.borderColor = cfg[id].fillDone;
+            } else {
+                fill.style.background = cfg[id].fill0;
+                thumb.style.borderColor = '#ccc';
+            }
+        }
+
+        ['h','f','p'].forEach(id => {
+            const track = document.getElementById('t-'+id);
+            track.addEventListener('mousedown', e => {
+                if (st[id].locked) return;
+                st[id].dragging = true;
+                st[id].startX = e.clientX - st[id].curX;
+            });
+            track.addEventListener('touchstart', e => {
+                if (st[id].locked) return;
+                st[id].dragging = true;
+                st[id].startX = e.touches[0].clientX - st[id].curX;
+            }, { passive: true });
+        });
+
+        document.addEventListener('mousemove', e => {
+            ['h','f','p'].forEach(id => { if (st[id].dragging) setPos(id, e.clientX - st[id].startX); });
+        });
+        document.addEventListener('touchmove', e => {
+            ['h','f','p'].forEach(id => { if (st[id].dragging) setPos(id, e.touches[0].clientX - st[id].startX); });
+        }, { passive: true });
+
+        function finish(id) {
+            if (!st[id].dragging) return;
+            st[id].dragging = false;
+            const pct = st[id].curX / maxW(id);
+            const thumb = document.getElementById('th-'+id);
+            const fill  = document.getElementById('f-'+id);
+            const tt    = document.getElementById('tt-'+id);
+            const msg   = document.getElementById('msg-'+id);
+            const rb    = document.getElementById('rb-'+id);
+
+            if (pct >= 0.88) {
+                st[id].locked = true;
+                thumb.style.transition = 'transform 0.2s ease';
+                fill.style.transition = 'width 0.2s ease';
+                setPos(id, maxW(id));
+                thumb.innerHTML = `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="${cfg[id].fillDone}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+                tt.style.opacity = '0';
+                msg.textContent = cfg[id].msgText;
+                rb.style.display = 'inline';
+                if (id === 'h' || id === 'f') setTimeout(() => openVideo(id), 350);
+                if (id === 'p') setTimeout(() => window.open('https://palomapresidente.com.co', '_blank'), 350);
+            } else {
+                thumb.style.transition = 'transform 0.35s cubic-bezier(.22,1,.36,1)';
+                fill.style.transition = 'width 0.35s cubic-bezier(.22,1,.36,1), background 0.3s';
+                setPos(id, 0);
+                thumb.style.borderColor = '#ccc';
+                setTimeout(() => { thumb.style.transition = ''; fill.style.transition = ''; }, 360);
+            }
+        }
+
+        document.addEventListener('mouseup',  () => ['h','f','p'].forEach(finish));
+        document.addEventListener('touchend', () => ['h','f','p'].forEach(finish));
+
+        function resetSlider(id) {
+            st[id].locked = false;
+            st[id].curX = 0;
+            const thumb = document.getElementById('th-'+id);
+            const fill  = document.getElementById('f-'+id);
+            const tt    = document.getElementById('tt-'+id);
+            const msg   = document.getElementById('msg-'+id);
+            const rb    = document.getElementById('rb-'+id);
+            thumb.style.transition = 'transform 0.3s ease';
+            fill.style.transition = 'width 0.3s ease, background 0.3s';
+            thumb.style.transform = 'translateX(0)';
+            fill.style.width = '54px';
+            fill.style.background = cfg[id].fill0;
+            thumb.style.borderColor = '#ccc';
+            thumb.innerHTML = `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>`;
+            tt.style.opacity = '1';
+            msg.textContent = '';
+            rb.style.display = 'none';
+            setTimeout(() => { thumb.style.transition = ''; fill.style.transition = ''; }, 310);
+        }
+        // ── Hero Slider ──
+        const hst = { dragging: false, startX: 0, curX: 0, locked: false };
+
+        function hmaxW() { return document.getElementById('ht').offsetWidth - 58; }
+
+        function hSetPos(x) {
+            const m = hmaxW();
+            x = Math.max(0, Math.min(x, m));
+            hst.curX = x;
+            const pct = x / m;
+            const thumb = document.getElementById('hth');
+            const fill  = document.getElementById('hf');
+            const tt    = document.getElementById('htt');
+            thumb.style.transform = `translateX(${x}px)`;
+            fill.style.width = (x + 58) + 'px';
+            tt.style.opacity = Math.max(0, 1 - pct * 2.5);
+            fill.style.background = `rgba(255,255,255,${0.22 + pct * 0.3})`;
+        }
+
+        const htrack = document.getElementById('ht');
+        const hthumb = document.getElementById('hth');
+
+        htrack.addEventListener('mousedown', e => {
+            if (hst.locked) return;
+            hst.dragging = true;
+            hst.startX = e.clientX - hst.curX;
+            hthumb.classList.add('dragging');
+        });
+        htrack.addEventListener('touchstart', e => {
+            if (hst.locked) return;
+            hst.dragging = true;
+            hst.startX = e.touches[0].clientX - hst.curX;
+            hthumb.classList.add('dragging');
+        }, { passive: true });
+
+        document.addEventListener('mousemove', e => {
+            if (hst.dragging) hSetPos(e.clientX - hst.startX);
+        });
+        document.addEventListener('touchmove', e => {
+            if (hst.dragging) hSetPos(e.touches[0].clientX - hst.startX);
+        }, { passive: true });
+
+        function hFinish() {
+            if (!hst.dragging) return;
+            hst.dragging = false;
+            hthumb.classList.remove('dragging');
+            const pct = hst.curX / hmaxW();
+            if (pct >= 0.88) {
+                hst.locked = true;
+                hthumb.classList.add('locked');
+                hthumb.style.transition = 'transform 0.2s ease';
+                document.getElementById('hf').style.transition = 'width 0.2s ease';
+                hSetPos(hmaxW());
+                hthumb.innerHTML = '<span style="font-size:22px">🎉</span>';
+                document.getElementById('htt').style.opacity = '0';
+                document.getElementById('hmsg').textContent = '¡Redirigiendo…';
+                setTimeout(() => {
+                    window.open('https://linktr.ee/qr/f10ded81-7cd2-4c39-aa66-6f632cd3ee1c', '_blank');
+                    // Reset after opening
+                    setTimeout(() => {
+                        hst.locked = false;
+                        hst.curX = 0;
+                        hthumb.classList.remove('locked');
+                        hthumb.style.transition = 'transform 0.3s ease';
+                        hthumb.style.transform = 'translateX(0)';
+                        document.getElementById('hf').style.width = '58px';
+                        document.getElementById('hf').style.background = 'rgba(255,255,255,0.22)';
+                        hthumb.innerHTML = '<span class="hand-emoji" style="font-size:22px">👉</span>';
+                        document.getElementById('htt').style.opacity = '1';
+                        document.getElementById('hmsg').textContent = '';
+                        setTimeout(() => { hthumb.style.transition = ''; document.getElementById('hf').style.transition = ''; }, 320);
+                    }, 1800);
+                }, 400);
+            } else {
+                hthumb.style.transition = 'transform 0.35s cubic-bezier(.22,1,.36,1)';
+                document.getElementById('hf').style.transition = 'width 0.35s cubic-bezier(.22,1,.36,1), background 0.3s';
+                hSetPos(0);
+                setTimeout(() => { hthumb.style.transition = ''; document.getElementById('hf').style.transition = ''; }, 360);
+            }
+        }
+
+        document.addEventListener('mouseup',  hFinish);
+        document.addEventListener('touchend', hFinish);
+    </script>
+</html>
