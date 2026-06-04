@@ -358,27 +358,27 @@
 <body>
     <div class="container">
 
-        <!-- ── Paloma Presidente (primero) ── -->
-        <div class="swipe-card" style="background:linear-gradient(135deg,#fff8f0,#fff2e8);border-color:#f5d5b0;margin-bottom:16px;">
-            <div class="swipe-icon" style="background:#FFF0DB;">🕊️</div>
+        <!-- ── El Tigre Presidente (primero) ── -->
+        <div class="swipe-card" style="background:linear-gradient(135deg,#1a0a00,#3d1a00,#7a3500);border-color:#ff6a00;margin-bottom:16px;">
+            <div class="swipe-icon" style="background:linear-gradient(135deg,#ff8c00,#ff4500);font-size:28px;box-shadow:0 4px 16px rgba(255,100,0,0.5);">🐯</div>
             <div>
-                <p class="swipe-title" style="color:#b85c00;">Paloma Presidente</p>
-                <p class="swipe-sub">Visita la página oficial de campaña</p>
+                <p class="swipe-title" style="color:#ffb347;text-shadow:0 1px 6px rgba(255,80,0,0.5);">El Tigre Presidente</p>
+                <p class="swipe-sub" style="color:rgba(255,200,120,0.8);">Visita la página oficial de campaña</p>
             </div>
-            <div class="track" id="t-p" style="background:#f5e6d3;border-color:#e8c99a;">
-                <div class="fill" id="f-p" style="background:#F5C070;"></div>
-                <div class="thumb" id="th-p">
-                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <div class="track" id="t-p" style="background:repeating-linear-gradient(100deg,#2b1000 0px,#2b1000 18px,#1a0800 18px,#1a0800 28px);border-color:#ff6a00;">
+                <div class="fill" id="f-p" style="background:linear-gradient(90deg,#ff8c00,#ff4500);"></div>
+                <div class="thumb" id="th-p" style="background:#1a0800;border-color:#ff6a00;">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#ff8c00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
                     </svg>
                 </div>
-                <div class="track-text" id="tt-p" style="color:#b85c00;">
+                <div class="track-text" id="tt-p" style="color:#ffb347;font-weight:700;">
                     Desliza para visitar
                     <span class="arrows"><span>›</span><span>›</span><span>›</span></span>
                 </div>
             </div>
-            <div class="swipe-msg" id="msg-p" style="color:#b85c00;"></div>
-            <button class="reset-btn" id="rb-p" style="display:none" onclick="resetSlider('p')">← Volver</button>
+            <div class="swipe-msg" id="msg-p" style="color:#ffb347;"></div>
+            <button class="reset-btn" id="rb-p" style="display:none;color:#ff8c00;" onclick="resetSlider('p')">← Volver</button>
         </div>
 
         <!-- ── Hero Swipe CTA ── -->
@@ -501,7 +501,7 @@
                 title: '🚀 Mi Futuro',
                 clips: [
                     'https://player.cloudinary.com/embed/?cloud_name=dqmldaklh&public_id=WhatsApp_Video_2026-04-26_at_11.28.23_PM_e0mbwr',
-                    'https://www.youtube.com/embed/O_Pi15KKgrU?autoplay=1&rel=0'
+                    'yt:https://www.youtube.com/shorts/O_Pi15KKgrU'
                 ]
             }
         };
@@ -520,7 +520,7 @@
         function renderClip(id, idx) {
             const v = videos[id];
             const total = v.clips.length;
-            const url = v.clips[idx];
+            const raw = v.clips[idx];
             const body = document.getElementById('vmodal-body');
             const navHtml = total > 1 ? `
                 <div class="video-nav">
@@ -528,11 +528,22 @@
                     <span class="vnav-counter">${idx + 1} / ${total}</span>
                     <button class="vnav-btn" onclick="nextClip()" ${idx === total - 1 ? 'disabled' : ''}>Siguiente ›</button>
                 </div>` : '';
-            body.innerHTML = `
-                <div class="video-wrapper">
-                    <iframe src="${url}" allow="autoplay; fullscreen; encrypted-media" allowfullscreen></iframe>
-                </div>
-                ${navHtml}`;
+            if (raw.startsWith('yt:')) {
+                const ytUrl = raw.slice(3);
+                body.innerHTML = `
+                    <div class="video-wrapper" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;background:linear-gradient(135deg,#ff0000,#900000);border-radius:14px;">
+                        <svg width="60" height="60" viewBox="0 0 24 24" fill="white"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+                        <span style="color:#fff;font-size:14px;font-weight:700;text-align:center;padding:0 24px;line-height:1.4;">Paloma Valencia apoya a<br>Abelardo De la Espriella</span>
+                        <a href="${ytUrl}" target="_blank" style="background:#fff;color:#cc0000;font-weight:800;font-size:15px;padding:12px 28px;border-radius:30px;text-decoration:none;box-shadow:0 4px 16px rgba(0,0,0,0.35);">▶ Ver en YouTube</a>
+                    </div>
+                    ${navHtml}`;
+            } else {
+                body.innerHTML = `
+                    <div class="video-wrapper">
+                        <iframe src="${raw}" allow="autoplay; fullscreen; encrypted-media" allowfullscreen></iframe>
+                    </div>
+                    ${navHtml}`;
+            }
         }
 
         function nextClip() {
@@ -554,7 +565,7 @@
         const cfg = {
             h: { fill0:'#CECBF6', fillDone:'#534AB7', msgText:'¡Abriendo tu Historia…!' },
             f: { fill0:'#B5D4F4', fillDone:'#185FA5', msgText:'¡Abriendo tu Futuro…!'  },
-            p: { fill0:'#F5C070', fillDone:'#b85c00', msgText:'¡Abriendo la página…!'  }
+            p: { fill0:'linear-gradient(90deg,#ff8c00,#ff4500)', fillDone:'#ff4500', msgText:'¡Abriendo la página…!'  }
         };
         const st = {
             h: { dragging:false, startX:0, curX:0, locked:false },
@@ -625,7 +636,7 @@
                 msg.textContent = cfg[id].msgText;
                 rb.style.display = 'inline';
                 if (id === 'h' || id === 'f') setTimeout(() => openVideo(id), 350);
-                if (id === 'p') setTimeout(() => window.open('https://palomapresidente.com.co', '_blank'), 350);
+                if (id === 'p') setTimeout(() => window.open('https://defensoresdelapatria.com', '_blank'), 350);
             } else {
                 thumb.style.transition = 'transform 0.35s cubic-bezier(.22,1,.36,1)';
                 fill.style.transition = 'width 0.35s cubic-bezier(.22,1,.36,1), background 0.3s';
